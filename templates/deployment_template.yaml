@@ -1,0 +1,37 @@
+---
+kind: Service                   # creating a service object    
+apiVersion: v1
+metadata:
+  name: helloworldservice       # name of the service
+spec:
+  selector:
+    app: hello-world            # any Pod that has the label selector of "hello-world"
+  ports:
+    - protocol: "TCP"         
+      port: 8081                # (ClusterIP) Port accessible inside cluster
+      targetPort: 8080          # (POD) Port to forward to inside the pod
+      nodePort: 30002           # (Client) Port accessible from the external world. You can choose from 30000 - 32767
+  type: LoadBalancer
+
+# Each service will get an IP address known as a ClusterIP. 
+# The user/client will connect to a service via the ClusterIP which forwards traffic to one of the Pods. 
+# The service does load balancing while selecting the Pod to forward the data/traffic
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: myappdeployment
+spec:
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+        - name: hello-world
+          image: tutum/hello-world
+          ports:
+            - containerPort: 8080

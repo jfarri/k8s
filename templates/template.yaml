@@ -1,0 +1,21 @@
+apiVersion: apps/v1                # the api endpoint we want to connect to on the API server
+kind: Deployment                   # kind field defines the object type, in this case its a Deployment 
+metadata:                          # metadata you attach information to the objects 
+  name: nginx-deployment           # ...like name
+  labels:
+    app: nginx
+spec:                              # spec is used to declare our intent or desired state
+  replicas: 3                      # replica sets, we want to ensure there are at least 3 PODs running, rs's are used primarily in Deployment                     
+  selector:                        # label selector, lets you filter objects based on label
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:                                 # 
+      containers:
+      - name: nginx
+        image: nginx:1.7.9
+        ports:
+        - containerPort: 80
